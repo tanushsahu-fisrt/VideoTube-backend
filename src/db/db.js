@@ -15,3 +15,5 @@ const connectDB = async ()=>{
 
 
 export default connectDB
+
+// mongodb+srv://tanush:tanush123@cluster0.qxsrc.mongodb.net/video

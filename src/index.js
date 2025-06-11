@@ -22,15 +22,7 @@ connectDB()
 })
 
 
-
-
-
-
-
-
-
-
-
+  
 
 /*
 import express from expreess;
