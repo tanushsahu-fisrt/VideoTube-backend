@@ -19,7 +19,7 @@ const userSchema = new Schema({
         trim: true,
         lowercase : true,
     },
-    fullname : {
+    fullName : {
         type: String,
         required: true,
         trim: true,
@@ -57,11 +57,11 @@ userSchema.pre("save", async function(next){
     next()
 })
 
-userSchema.methods.isPasswordCorrect() = async function(password){
+userSchema.methods.isPasswordCorrect = async function(password){
     return await bcrypt.compare(password,this.password)
 }
 
-userSchema.methods.generateAccesstoken() = function(){
+userSchema.methods.generateAccesstoken = function(){
     return jwt.sign(
         {
             _id: this._id,
