@@ -73,7 +73,6 @@ const registerUser = asyncHandler( async (req,res) => {
         email,
         password,
         username : username.toLowerCase(),
-
     })
 
     const createdUser = await User.findById(user._id).select( 
@@ -113,7 +112,7 @@ const loginUser = asyncHandler(async (req,res) => {
         throw new ApiError(401, "Invalid user credentials")
     }
 
-    const {accessToken , refreshToken } = await generateAccessAndRefreshtoken(user._id)
+    const {accessToken , refreshToken } = await generateAccessAndRefreshtoken(user._id);
 
     const loggedInUser = await User.findById(user._id)
     .select("-password -refreshToken"); 
@@ -168,6 +167,7 @@ const logoutUser = asyncHandler( async (req,res) => {
 })
 
 const refreshAccessToken = asyncHandler (async (req, res) => {
+    console.log(req.cookies);
     const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken;
 
     if(!incomingRefreshToken){
