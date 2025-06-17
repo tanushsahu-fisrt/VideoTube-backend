@@ -8,8 +8,21 @@ import {uploadOnCloudinary} from "../utils/cloudinary.js"
 
 
 const getAllVideos = asyncHandler(async (req, res) => {
-    const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query
+    // const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query
     //TODO: get all videos based on query, sort, pagination
+    const user = req.user?._id;
+    
+    if(!user){
+        throw new ApiError(404,"User not found");
+    }
+    
+    const videos = await Video.find({ owner: user  , ispublished : true}).select("-__v"); 
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(200, videos, "Fetched all user videos") 
+        );
 })
 
 const publishAVideo = asyncHandler(async (req, res) => {
