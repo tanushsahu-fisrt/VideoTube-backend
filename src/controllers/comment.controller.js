@@ -13,7 +13,9 @@ const getVideoComments = asyncHandler(async (req, res) => {
         throw new ApiError(404,"videoId is invalid");
     }
 
-    const getAllComment = await Comment.find({ video : videoId }).limit(limit);
+    const getAllComment = await Comment.find({ video : videoId })
+                        .skip((page-1) * limit)
+                        .limit(Number(limit));
 
     return res
     .status(200)
