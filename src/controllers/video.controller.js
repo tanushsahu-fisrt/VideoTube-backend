@@ -6,6 +6,20 @@ import {ApiResponse} from "../utils/ApiResponse.js"
 import {asyncHandler} from "../utils/asyncHandler.js"
 import {uploadOnCloudinary} from "../utils/cloudinary.js"
 
+const allPublicVideos = asyncHandler( async (req ,res) => {
+
+    const videos = await Video.find({ ispublished : true});
+
+    if(videos.length === 0){
+        throw new ApiError(404,"No public Videos");
+    }
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200,videos,"Public Videos")
+    )
+})
 
 const getAllVideos = asyncHandler(async (req, res) => {
     // const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query
@@ -80,7 +94,7 @@ const getVideoById = asyncHandler(async (req, res) => {
         throw new ApiError(400,"Unable to get Video");
     }
 
-    const getVideoById = await Video.findById(videoId);
+    const getVideoById = await Video.findById(videoId).select("-__v");
 
     return res
     .status(200)
@@ -169,5 +183,6 @@ export {
     getVideoById,
     updateVideo,
     deleteVideo,
-    togglePublishStatus
+    togglePublishStatus,
+    allPublicVideos
 }

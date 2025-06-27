@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import {
+    allPublicVideos,
     deleteVideo,
     getAllVideos,
     getVideoById,
@@ -11,7 +12,7 @@ import {verifyJWT} from "../middlewares/auth.middleware.js"
 import { upload } from "../middlewares/multer.middleware.js"
 
 const router = Router();
-router.use(verifyJWT); // Apply verifyJWT middleware to all routes in this file
+// router.use(verifyJWT); // Apply verifyJWT middleware to all routes in this file
 
 router
     .route("/")
@@ -30,6 +31,8 @@ router
         ]),
         publishAVideo
     );
+
+router.route("/public").get(allPublicVideos);
 
 router
     .route("/:videoId")
