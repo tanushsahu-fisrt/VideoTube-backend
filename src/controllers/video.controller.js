@@ -30,7 +30,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
         throw new ApiError(404,"User not found");
     }
     
-    const videos = await Video.find({ owner: user  , ispublished : true}).select("-__v"); 
+    const videos = await Video.find({ owner: user  }).select("-__v"); 
 
     return res
         .status(200)
@@ -143,13 +143,14 @@ const updateVideo = asyncHandler(async (req, res) => {
 })  
 
 const deleteVideo = asyncHandler(async (req, res) => {
-    const { videoId } = req.params
-
+    const { videoId } = req.params;
+    
     const deleteVideo = await Video.findByIdAndDelete(videoId);
-
-    if(deleteVideo == null){
+    
+    if(deleteVideo == null){    
         throw new ApiError(404,"Error in deleting Video");
     }
+
     return res
     .status(200)
     .json(
@@ -178,11 +179,11 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
 })
 
 export {
-    getAllVideos,
-    publishAVideo,
-    getVideoById,
-    updateVideo,
-    deleteVideo,
+    getAllVideos, 
+    publishAVideo, 
+    getVideoById, 
+    updateVideo, 
+    deleteVideo, 
     togglePublishStatus,
-    allPublicVideos
+    allPublicVideos 
 }
