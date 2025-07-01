@@ -31,9 +31,6 @@ router
         ]),
         publishAVideo
     );
-
-router.route("/public").get(allPublicVideos);
-
 router
     .route("/:videoId")
     .get(getVideoById)
