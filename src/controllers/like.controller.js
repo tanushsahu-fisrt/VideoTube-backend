@@ -134,7 +134,6 @@ const getLikedVideos = asyncHandler(async (req, res) => {
         }
     }).populate("video","-__v")
     
-    console.log(GetAllLikedVideo)
     return res
     .status(200)
     .json(
