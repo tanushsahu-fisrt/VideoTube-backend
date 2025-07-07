@@ -49,24 +49,6 @@ const toggleSubscription = asyncHandler(async (req, res) => {
 
 })
 
-// controller to return subscriber list of a channel
-const getUserChannelSubscribers = asyncHandler(async (req, res) => {
-    const {subscriberId} = req.params;
-
-    if(!isValidObjectId(subscriberId)){
-        throw new ApiError(404,"Channel id is not valid");
-    }
-
-    const channelSubscribers = await Subscription.find({ subscriber : subscriberId })
-
-    return res
-    .status(200)
-    .json(
-        new ApiResponse(200, channelSubscribers ,"fetched subscriber list of channel")
-    )
-
-})
-
 // controller to return channel list to which user has subscribed 
 const getSubscribedChannels = asyncHandler(async (req, res) => {
     const { channelId } = req.params;
@@ -75,13 +57,48 @@ const getSubscribedChannels = asyncHandler(async (req, res) => {
         throw new ApiError(404,"Channel id is not valid");
     }
 
-    const userChannelSubscribers = await Subscription.find({ channel : channelId })
+    const userChannelSubscribers = await Subscription.find({ channel : channelId });
+    
+    const getUsersId = userChannelSubscribers.map( sub => sub.subscriber );
+
+    const userArr = await Promise.all(
+        getUsersId.map( userId =>
+        User.findById(userId).select("-password -refreshToken -watchHistory -__v -_id")
+        )
+    );
 
     return res
     .status(200)
     .json(
-        new ApiResponse(200, userChannelSubscribers ,"Fetched list of channels subscribed by the user")
+        new ApiResponse(200, userArr ,"Fetched list of channels subscribed by the user")
     )
+})
+
+// controller to return subscriber list of a channel
+const getUserChannelSubscribers = asyncHandler(async (req, res) => {
+    const {subscriberId} = req.params;
+
+    if(!isValidObjectId(subscriberId)){
+        throw new ApiError(404,"Channel id is not valid");
+    }
+
+    // Get all subscriptions by user
+    const channelSubscribers = await Subscription.find({ subscriber : subscriberId })
+
+    const getUsersId = channelSubscribers.map( sub => sub.channel);
+    
+    const userArr = await Promise.all(
+        getUsersId.map( userId =>
+        User.findById(userId).select("-password -refreshToken -watchHistory -__v ")
+        )
+    );
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200, userArr ,"fetched subscriber list of channel")
+    )
+
 })
 
 export {
