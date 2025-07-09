@@ -116,9 +116,29 @@ const deleteTweet = asyncHandler(async (req, res) => {
     )
 })
 
+
+const getAllTweets = asyncHandler( async (req ,res) => {
+
+    const tweets = await Tweet.find({})
+    .sort({ createdAt : -1 })
+    .populate('owner','username avatar');
+
+    if(!tweets){
+        throw new ApiError(404,'error in fetching tweets')
+    }
+
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200,tweets,"Tweet fetched")
+    )
+})
+
 export {
     createTweet,
     getUserTweets,
     updateTweet,
-    deleteTweet
+    deleteTweet,
+    getAllTweets
 }
