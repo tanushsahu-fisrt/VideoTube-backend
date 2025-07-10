@@ -8,7 +8,7 @@ import {uploadOnCloudinary} from "../utils/cloudinary.js"
 
 const allPublicVideos = asyncHandler( async (req ,res) => {
 
-    const videos = await Video.find({ ispublished : true});
+    const videos = await Video.find({ ispublished : true}).populate('owner','avatar username')
 
     if(videos.length === 0){
         throw new ApiError(404,"No public Videos");

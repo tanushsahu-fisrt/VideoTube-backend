@@ -132,7 +132,14 @@ const getLikedVideos = asyncHandler(async (req, res) => {
         video : {
             $exists : true
         }
-    }).populate("video","-__v")
+    }).populate({
+        path : "video",
+        select : "-__v",
+        populate : {
+            path : "owner",
+            select : "avatar"
+        }
+    })
     
     return res
     .status(200)
