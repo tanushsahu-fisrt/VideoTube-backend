@@ -81,8 +81,8 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
 })
 
 const toggleTweetLike = asyncHandler(async (req, res) => {
-    const {tweetId} = req.params
     //TODO: toggle like on tweet
+    const {tweetId} = req.params
     
     if(!isValidObjectId(tweetId)){
         throw new ApiError(404,"Invalid Tweet Id")
@@ -94,7 +94,7 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
         throw new ApiError(404,"User id not found")
     }
 
-    const existingTweetLike = await Like.findOne({ tweetId : tweetId , likedBy : userId })
+    const existingTweetLike = await Like.findOne({ tweet : tweetId , likedBy : userId })
 
     if(existingTweetLike){
         await Like.deleteOne({ _id : existingTweetLike._id })
@@ -137,7 +137,7 @@ const getLikedVideos = asyncHandler(async (req, res) => {
         select : "-__v",
         populate : {
             path : "owner",
-            select : "avatar"
+            select : "avatar username"
         }
     })
     
@@ -148,9 +148,31 @@ const getLikedVideos = asyncHandler(async (req, res) => {
     )
 })
 
+const getLikedTweets = asyncHandler( async(req ,res) => {
+    const userId = req.user._id;
+
+    if(!userId){
+        throw new ApiError(404 , 'user id is required');
+    }
+
+    const GetAllLikedTweet = await Like.find({
+        likedBy : userId,
+        tweet : {
+            $exists : true,
+        }
+    })
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200, GetAllLikedTweet ,"Fetched all liked tweet")
+    )
+    
+})
 export {
     toggleCommentLike,
     toggleTweetLike,
     toggleVideoLike,
-    getLikedVideos
+    getLikedVideos,
+    getLikedTweets
 }
