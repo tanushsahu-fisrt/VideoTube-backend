@@ -101,8 +101,32 @@ const getUserChannelSubscribers = asyncHandler(async (req, res) => {
 
 })
 
+const checkIsSubscriber = asyncHandler(async (req, res) => {
+    
+    const {channelId} = req.body;
+
+
+    if(!isValidObjectId(channelId)){
+        throw new ApiError(404,"channel id is not valid");
+    }
+
+    // Get all subscriptions by user
+    const isChannelSubscribed = await Subscription.exists({ 
+        channel : channelId,
+        subscriber : req.user._id 
+    })
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200, !!isChannelSubscribed ,"wait!! user will subscribe")
+    )
+
+})
+
 export {
     toggleSubscription,
     getUserChannelSubscribers,
-    getSubscribedChannels
+    getSubscribedChannels,
+    checkIsSubscriber
 }
