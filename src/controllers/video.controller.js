@@ -39,6 +39,23 @@ const getAllVideos = asyncHandler(async (req, res) => {
         );
 })
 
+const getAllUserVideos = asyncHandler(async (req, res) => {
+    
+    const { channelId } = req.params;
+    
+    if(!channelId){
+        throw new ApiError(404,"User not found");
+    }
+    
+    const videos = await Video.find({ owner: channelId  }).select("-__v"); 
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(200, videos, "Fetched all user videos") 
+        );
+})
+
 const publishAVideo = asyncHandler(async (req, res) => {
     const { title, description} = req.body
     
@@ -185,5 +202,6 @@ export {
     updateVideo, 
     deleteVideo, 
     togglePublishStatus,
-    allPublicVideos 
+    allPublicVideos,
+    getAllUserVideos 
 }
