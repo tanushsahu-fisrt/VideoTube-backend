@@ -1,4 +1,5 @@
-🎥 VideoTube
+🎥 <h1>VideoTube</h1>
+</br>
 VideoTube is a full-stack video-sharing platform inspired by YouTube. It allows users to upload videos, like/dislike, comment, subscribe to other users, and even integrates with Twitter for sharing. Built from scratch to sharpen my full-stack skills and simulate a real-world content-sharing experience.
 
 This is the backend server for **VideoTube**, a video sharing platform built using **Node.js**, **Express**, and **MongoDB**. 
