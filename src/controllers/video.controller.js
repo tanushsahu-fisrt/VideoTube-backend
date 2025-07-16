@@ -47,12 +47,12 @@ const getAllUserVideos = asyncHandler(async (req, res) => {
         throw new ApiError(404,"User not found");
     }
     
-    const videos = await Video.find({ owner: channelId  }).select("-__v"); 
+    const videos = await Video.find({ owner: channelId }).select("-__v"); 
 
     return res
         .status(200)
         .json(
-            new ApiResponse(200, videos, "Fetched all user videos") 
+            new ApiResponse(200, videos, "Fetched user videos") 
         );
 })
 

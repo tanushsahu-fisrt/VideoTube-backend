@@ -44,7 +44,7 @@ const getUserTweets = asyncHandler(async (req, res) => {
         throw new ApiError(404,"Unable to get User");
     }
 
-    const userTweet = await Tweet.find({ owner : userId });
+    const userTweet = await Tweet.find({ owner : userId }).populate('owner','avatar username').select('-__v');
 
     if(userTweet.length === 0){
        return res
