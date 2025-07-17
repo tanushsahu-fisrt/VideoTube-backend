@@ -169,10 +169,60 @@ const getLikedTweets = asyncHandler( async(req ,res) => {
     )
     
 })
+
+const getLikedComments = asyncHandler( async(req ,res) => {
+
+    const userId = req.user._id;
+
+    if(!userId){
+        throw new ApiError(404,'user id is required');
+    }
+
+    const GetAllLikedComment = await Like.find({
+        likedBy : userId,
+        comment : {
+            $exists : true,
+        }
+    })
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200, GetAllLikedComment ,"Fetched all liked tweet")
+    )
+    
+})
+
+const checkIsLiked = asyncHandler( async(req ,res) => {
+    const userId = req.user._id;
+
+    const { videoId } = req.params;
+
+    if(!userId){
+        throw new ApiError(404 , 'user id is required');
+    }
+
+    const isLiked = await Like.exists({
+        video : videoId,
+        likedBy : userId
+    })
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200, !!isLiked ,"checked Is Liked")
+    )
+    
+})
+
+
+
 export {
     toggleCommentLike,
     toggleTweetLike,
     toggleVideoLike,
     getLikedVideos,
-    getLikedTweets
+    getLikedTweets,
+    checkIsLiked,
+    getLikedComments
 }

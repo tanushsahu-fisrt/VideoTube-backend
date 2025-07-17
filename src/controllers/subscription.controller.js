@@ -110,7 +110,7 @@ const checkIsSubscriber = asyncHandler(async (req, res) => {
         throw new ApiError(404,"channel id is not valid");
     }
 
-    // Get all subscriptions by user
+    // check subscriptions by user
     const isChannelSubscribed = await Subscription.exists({ 
         channel : channelId,
         subscriber : req.user._id 
